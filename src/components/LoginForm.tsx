@@ -12,13 +12,12 @@ const LoginForm: React.FC = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         
-        // Validação básica
+
         if (!email || !password) {
             alert('Por favor, preencha todos os campos');
             return;
         }
 
-        // Executar a mutation
         loginMutation.mutate({ email, password });
     };
 

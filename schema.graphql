@@ -1,0 +1,104 @@
+# Schema GraphQL baseado no seu backend
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  position: Int!
+  isActive: Boolean!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type LoginTokens {
+  accessToken: String!
+  refreshToken: String!
+  expiresIn: String!
+}
+
+type LoginResponse {
+  message: String!
+  user: User!
+  tokens: LoginTokens!
+}
+
+type Permissions {
+  userId: ID!
+  role: String!
+  permissions: [String!]!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input RefreshTokenInput {
+  refreshToken: String!
+}
+
+input CreateUserInput {
+  name: String!
+  email: String!
+  password: String!
+  position: Int
+  isActive: Boolean
+}
+
+input UpdateUserInput {
+  name: String
+  email: String
+  password: String
+  position: Int
+  isActive: Boolean
+}
+
+type Query {
+  # Buscar usuário por ID
+  user(id: ID!): User
+  
+  # Buscar todos os usuários (admin only)
+  users: [User!]!
+  
+  # Dados do usuário atual
+  me: User
+  
+  # Permissões do usuário atual
+  myPermissions: Permissions
+  
+  # Buscar usuários com filtros
+  searchUsers(
+    name: String
+    email: String
+    position: Int
+    isActive: Boolean
+    limit: Int
+    offset: Int
+  ): [User!]!
+  
+  # Buscar usuários com critérios avançados
+  getUsersWithCriteria(
+    evenIds: Boolean
+    minPosition: Int
+    maxPosition: Int
+    isActive: Boolean
+    limit: Int
+    offset: Int
+  ): [User!]!
+}
+
+type Mutation {
+  # Autenticação
+  login(input: LoginInput!): LoginResponse!
+  refreshToken(input: RefreshTokenInput!): LoginResponse!
+  
+  # Gerenciamento de usuários
+  createUser(input: CreateUserInput!): User!
+  updateUser(id: ID!, input: UpdateUserInput!): User!
+  deleteUser(id: ID!): Boolean!
+  
+  # Ações de admin
+  activateUser(id: ID!): User!
+  deactivateUser(id: ID!): User!
+  changeUserRole(id: ID!, position: Int!): User!
+}
